@@ -5,3 +5,5 @@ package = DSpace
 
 dependencies[] = biblio
 dependencies[] = feeds
+
+files[] = dspace.module
