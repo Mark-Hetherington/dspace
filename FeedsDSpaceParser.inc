@@ -56,6 +56,7 @@ class FeedsDSpaceParser extends FeedsParser {
 
       //dvm($items);
       $result->items[] = $items;
+      unset($items);
     }
 
     return $result;
@@ -75,12 +76,16 @@ class FeedsDSpaceParser extends FeedsParser {
         'description' => t('Identifier of the feed item.'),
       ),
       'lastmodified' => array(
-        'name' => t('ID'),
+        'name' => t('Last Modified'),
         'description' => t('Last Modified of the feed item.'),
       ),
       'title' => array(
         'name' => t('Title'),
         'description' => t('Title of the feed item.'),
+      ),
+      'abstract' => array(
+        'name' => t('Abstract'),
+        'description' => t('Abstract of the feed item.'),
       ),
       'submitter' => array(
         'name' => t('Submitter'),
