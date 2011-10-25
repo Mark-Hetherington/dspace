@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * A block module that displays recent blog and forum posts.
+ */
+
+/**
+ * Implements hook_help.
+ *
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+function dspace_biblio_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#dspace_biblio":
+      return '<p>' . t("Import DSpace items into Drupal as Biblio nodes. Requires the the <a href='https://wiki.duraspace.org/display/DSPACE/REST+API'>DSpace REST API plugin</a>") . '</p>';
+      break;
+  }
+}
+
+/**
+ * Alter mapping targets for entities. Use this hook to add additional target
+ * options to the mapping form of Node processors.
+ *
+ * If the key in $targets[] does not correspond to the actual key on the node
+ * object ($node->key), real_target MUST be specified. See mappers/link.inc
+ *
+ * For an example implementation, see mappers/content.inc
+ *
+ * @param &$targets
+ *   Array containing the targets to be offered to the user. Add to this array
+ *   to expose additional options. Remove from this array to suppress options.
+ *   Remove with caution.
+ * @param $entity_type
+ *   The entity type of the target, for instance a 'node' entity.
+ * @param $bundle_name
+ *   The bundle name for which to alter targets.
+ */
+function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+  if ($entity_type == 'node' && $bundle_name == 'biblio') {
+    // Declare some biblio fields.
+    $targets['biblio_type'] = array(
+      'name' => 'Biblio: Type',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('The numeric type of bibliographic resource, e.g. 100.'),
+    );
+    $targets['biblio_type_name'] = array(
+      'name' => 'Biblio: Type Name',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('The type of bibliographic resource, e.g. Book.'),
+    );
+    $targets['biblio_contributors'] = array(
+      'name' => 'Biblio: Contributors',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Author(s) of publication.'),
+    );
+    $targets['biblio_date'] = array(
+      'name' => 'Biblio: Date',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Date of publication.'),
+    );
+    $targets['biblio_year'] = array(
+      'name' => 'Biblio: Year',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Year of publication.'),
+    );
+    $targets['biblio_edition'] = array(
+      'name' => 'Biblio: Edition',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Numeric edition, e.g. 2.'),
+    );
+    $targets['biblio_publisher'] = array(
+      'name' => 'Biblio: Publisher',
+      'callback' => 'dspace_biblio_set_target',
+    );
+  }
+}
+
+/**
+ * Example callback specified in hook_feeds_processor_targets_alter().
+ *
+ * @param $source
+ *   Field mapper source settings.
+ * @param $entity
+ *   An entity object, for instance a node object.
+ * @param $target
+ *   A string identifying the target on the node.
+ * @param $value
+ *   The value to populate the target with.
+ *
+ */
+function dspace_biblio_set_target($source, $entity, $target, $value) {
+echo "HERE";
+  /*switch ($target) {
+    case 'biblio_contributors':
+      dvm($value);
+      $contributors = explode('&', $value);
+      foreach ($contributors as $key => $contributor) {
+        dvm($contributor);
+        $entity->biblio_contributors[1][$key] = array('name' => trim($contributor));
+      }
+      break;
+
+    default:
+      dvm("Unkonwn");
+  }*/
+
+  dvm($entity);
+  /* $entity->$target['und'][0]['value'] = $value;
+
+  if (isset($source->importer->processor->config['input_format'])) {
+    $entity->$target['und'][0]['format'] =
+    $source->importer->processor->config['input_format'];
+    } */
+}
+
+/*function dspace_biblio_feeds_after_parse(FeedsSource $source, FeedsParserResult $result) {
+  dvm($source);
+  dvm($result);
+}*/

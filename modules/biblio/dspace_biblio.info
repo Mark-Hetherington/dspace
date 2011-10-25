@@ -1,0 +1,9 @@
+name = DSpace biblio import
+description = This module will import your DSpace REST API collection as Biblio nodes.
+core = 7.x
+package = DSpace
+
+dependencies[] = biblio
+dependencies[] = dspace
+
+files[] = dspace_biblio.module
