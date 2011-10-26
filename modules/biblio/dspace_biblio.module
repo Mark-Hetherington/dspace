@@ -44,6 +44,11 @@ function dspace_biblio_help($path, $arg) {
 function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
   if ($entity_type == 'node' && $bundle_name == 'biblio') {
     // Declare some biblio fields.
+    $targets['biblio_abst_e'] = array(
+      'name' => 'Biblio: Abstract',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Biblio abstract.'),
+    );
     $targets['biblio_type'] = array(
       'name' => 'Biblio: Type',
       'callback' => 'dspace_biblio_set_target',
@@ -54,10 +59,20 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
       'callback' => 'dspace_biblio_set_target',
       'description' => t('The type of bibliographic resource, e.g. Book.'),
     );
-    $targets['biblio_contributors'] = array(
-      'name' => 'Biblio: Contributors',
+    $targets['biblio_type_of_work'] = array(
+      'name' => 'Biblio: Type of work',
       'callback' => 'dspace_biblio_set_target',
-      'description' => t('Author(s) of publication.'),
+      'description' => t('The numeric type of bibliographic resource, e.g. 100.'),
+    );
+    $targets['biblio_contributors'] = array(
+      'name' => 'Biblio: Contributor(s)',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Contributor(s) of publication.'),
+    );
+    $targets['biblio_keywords'] = array(
+      'name' => 'Biblio: Keywords',
+      'callback' => 'dspace_biblio_set_target',
+      'description' => t('Keyword(s) of publication.'),
     );
     $targets['biblio_date'] = array(
       'name' => 'Biblio: Date',
@@ -69,13 +84,13 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
       'callback' => 'dspace_biblio_set_target',
       'description' => t('Year of publication.'),
     );
-    $targets['biblio_edition'] = array(
-      'name' => 'Biblio: Edition',
+    $targets['biblio_citekey'] = array(
+      'name' => 'Biblio: Citekey',
       'callback' => 'dspace_biblio_set_target',
-      'description' => t('Numeric edition, e.g. 2.'),
     );
-    $targets['biblio_publisher'] = array(
-      'name' => 'Biblio: Publisher',
+
+    $targets['biblio_url'] = array(
+      'name' => 'Biblio: URL',
       'callback' => 'dspace_biblio_set_target',
     );
   }
@@ -95,31 +110,49 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
  *
  */
 function dspace_biblio_set_target($source, $entity, $target, $value) {
-echo "HERE";
-  /*switch ($target) {
-    case 'biblio_contributors':
-      dvm($value);
-      $contributors = explode('&', $value);
-      foreach ($contributors as $key => $contributor) {
-        dvm($contributor);
-        $entity->biblio_contributors[1][$key] = array('name' => trim($contributor));
-      }
+
+  switch ($target) {
+
+    case 'biblio_abst_e':
+      $entity->biblio_abst_e = trim($value);
       break;
 
-    default:
-      dvm("Unkonwn");
-  }*/
+    case 'biblio_type_of_work':
+      $entity->biblio_type_of_work = trim($value);
+      break;
 
-  dvm($entity);
-  /* $entity->$target['und'][0]['value'] = $value;
+    case 'biblio_contributors':
+      $contributors = $value;
+      foreach ($contributors as $key => $contributor) {
+        $entity->biblio_contributors[$key] = array(
+          'name' => trim($contributor),
+          'auth_type' => 1,
+          'auth_category' => 1,
+        );
+      }
+      break;
+    case 'biblio_keywords':
+      $keywords = $value;
+      foreach ($keywords as $key => $keyword) {
+        $entity->biblio_keywords[$key] = trim($keyword);
+      }
+      break;
+    case 'biblio_date':
+      $entity->biblio_date = date('m/Y', strtotime(trim($value)));
+      break;
+    case 'biblio_year':
+      $entity->biblio_year = date('Y', strtotime(trim($value)));
+      break;
+    case 'biblio_citekey':
+      $entity->biblio_citekey = trim($value);
+      break;
+    case 'biblio_url':
+      $entity->biblio_url = trim($value);
+      break;
+  }
 
-  if (isset($source->importer->processor->config['input_format'])) {
-    $entity->$target['und'][0]['format'] =
-    $source->importer->processor->config['input_format'];
-    } */
+  //Hard code biblio type for now
+  $entity->biblio_type = 124;
+  $entity->biblio_author = 1;
+  //dvm($entity);
 }
-
-/*function dspace_biblio_feeds_after_parse(FeedsSource $source, FeedsParserResult $result) {
-  dvm($source);
-  dvm($result);
-}*/

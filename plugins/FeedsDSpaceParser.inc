@@ -30,31 +30,42 @@ class FeedsDSpaceParser extends FeedsParser {
       // Submitter
       $items['submitter'] = (string) $item->submitter->netId;
 
-      // Metadata
+      // Dublin Core Metadata
       $metadata = (string) $item->metadata;
       $metadata = simplexml_load_string("<metadata>" . $metadata . "</metadata>");
 
-      // URL
-      $url = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
-      $items['url'] = (string) $url[0]->content;
+      // DC.type
+      $type = $metadata->xpath('/metadata/meta[@name = "DC.type"]/@content');
+      $items['type'] = (string) $type[0]->content;
 
-      // Creators
+      // DC.identifier
+      $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
+      $items['identifier'] = (string) $identifier[0]->content;
+
+      // DC.creator
       $creators = $metadata->xpath('/metadata/meta[@name = "DC.creator"]/@content');
       foreach ($creators as $creator) {
         $items['creators'][] = (string) $creator;
       }
 
-      // Keywords
+      // DC.subject
       $keywords = $metadata->xpath('/metadata/meta[@name = "DC.subject"]/@content');
       foreach ($keywords as $keyword) {
         $items['keywords'][] = (string) $keyword;
       }
 
-      // Abstract
+      // DCTERMS.abstract
       $abstract = $metadata->xpath('/metadata/meta[@name = "DCTERMS.abstract"]/@content');
       $items['abstract'] = (string) $abstract[0]->content;
 
-      //dvm($items);
+      // DCTERMS.issued
+      $issued = $metadata->xpath('/metadata/meta[@name = "DCTERMS.issued"]/@content');
+      $items['issued'] = (string) $issued[0]->content;
+
+      // DCTERMS.bibliographicCitation
+      $citation = $metadata->xpath('/metadata/meta[@name = "DCTERMS.bibliographicCitation"]/@content');
+      $items['citation'] = (string) $citation[0]->content;
+
       $result->items[] = $items;
       unset($items);
     }
@@ -83,17 +94,17 @@ class FeedsDSpaceParser extends FeedsParser {
         'name' => t('Title'),
         'description' => t('Title of the feed item.'),
       ),
-      'abstract' => array(
-        'name' => t('Abstract'),
-        'description' => t('Abstract of the feed item.'),
-      ),
       'submitter' => array(
         'name' => t('Submitter'),
         'description' => t('Submitter of the feed item.'),
       ),
-      'url' => array(
-        'name' => t('URL'),
-        'description' => t('URL of the feed item.'),
+      'type' => array(
+        'name' => t('Type'),
+        'description' => t('Publication type of the feed item.'),
+      ),
+      'identifier' => array(
+        'name' => t('Identifier'),
+        'description' => t('Identifier of the feed item.'),
       ),
       'creators' => array(
         'name' => t('Creators'),
@@ -103,7 +114,19 @@ class FeedsDSpaceParser extends FeedsParser {
         'name' => t('Keywords'),
         'description' => t('Keywords of the feed item.'),
       ),
-        ) + parent::getMappingSources();
+      'abstract' => array(
+        'name' => t('Abstract'),
+        'description' => t('Abstract of the feed item.'),
+      ),
+      'issued' => array(
+        'name' => t('Issued'),
+        'description' => t('Issue Year of the feed item.'),
+      ),
+      'citation' => array(
+        'name' => t('Citation'),
+        'description' => t('Bibliographic citation of the feed item.'),
+      )
+    );
   }
 
 }
