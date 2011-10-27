@@ -42,6 +42,10 @@ class FeedsDSpaceParser extends FeedsParser {
       $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
       $items['identifier'] = (string) $identifier[0]->content;
 
+      // DC.number
+      $number = $metadata->xpath('/metadata/meta[@name = "DC.relation" and not(@scheme)]/@content');
+      $items['number'] = (string) $number[0]->content;
+
       // DC.creator
       $creators = $metadata->xpath('/metadata/meta[@name = "DC.creator"]/@content');
       foreach ($creators as $creator) {
@@ -105,6 +109,10 @@ class FeedsDSpaceParser extends FeedsParser {
       'identifier' => array(
         'name' => t('Identifier'),
         'description' => t('Identifier of the feed item.'),
+      ),
+      'number' => array(
+        'name' => t('Number'),
+        'description' => t('Number of the feed item.'),
       ),
       'creators' => array(
         'name' => t('Creators'),

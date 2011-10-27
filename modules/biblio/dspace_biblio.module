@@ -93,6 +93,11 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
       'name' => 'Biblio: URL',
       'callback' => 'dspace_biblio_set_target',
     );
+    
+    $targets['biblio_number'] = array(
+      'name' => 'Biblio: Number',
+      'callback' => 'dspace_biblio_set_target',
+    );
   }
 }
 
@@ -149,10 +154,11 @@ function dspace_biblio_set_target($source, $entity, $target, $value) {
     case 'biblio_url':
       $entity->biblio_url = trim($value);
       break;
+    case 'biblio_number':
+      $entity->biblio_number = trim($value);
+      break;
   }
 
   //Hard code biblio type for now
-  $entity->biblio_type = 124;
-  $entity->biblio_author = 1;
-  //dvm($entity);
+  $entity->biblio_type = 124;;
 }
