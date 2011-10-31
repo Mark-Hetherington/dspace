@@ -2,7 +2,7 @@
 
 /**
  * @file
- * A block module that displays recent blog and forum posts.
+ * A module that allows you to map a DSpace feed as node items.
  */
 
 /**

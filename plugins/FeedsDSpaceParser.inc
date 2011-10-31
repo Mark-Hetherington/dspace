@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Feeds DSpace parser
+ */
+
+/**
  * Class definition for DSpace Parser.
  *
  * Parses DSpace REST API feed.
