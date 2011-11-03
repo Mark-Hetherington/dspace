@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements hook_help.
+ * Implements hook_help().
  *
  * Displays help and module information.
  *
@@ -24,7 +24,7 @@ function dspace_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_feeds_plugins().
+ * Implements hook_feeds_plugins().
  */
 function dspace_feeds_plugins() {
   $info = array();
@@ -33,7 +33,7 @@ function dspace_feeds_plugins() {
     'name' => 'DSpace Feeds parser',
     'description' => 'Parses DSpace XML feed.',
     'handler' => array(
-      'parent' => 'FeedsParser', // A plugin needs to derive either directly or indirectly from FeedsFetcher, FeedsParser or FeedsProcessor.
+      'parent' => 'FeedsParser',
       'class' => 'FeedsDSpaceParser',
       'file' => 'plugins/FeedsDSpaceParser.inc',
       'path' => drupal_get_path('module', 'dspace'),
@@ -44,9 +44,9 @@ function dspace_feeds_plugins() {
 }
 
 /**
- * Implementation of hook_enable().
+ * Implements hook_enable().
  */
 function dspace_enable() {
-  //clear the cache to display in Feeds as available plugin.
+  // clear the cache to display in Feeds as available plugin.
   cache_clear_all('plugins:feeds:plugins', 'cache');
 }

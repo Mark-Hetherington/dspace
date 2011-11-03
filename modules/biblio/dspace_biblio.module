@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements hook_help.
+ * Implements hook_help().
  *
  * Displays help and module information.
  *
@@ -24,13 +24,9 @@ function dspace_biblio_help($path, $arg) {
 }
 
 /**
- * Alter mapping targets for entities. Use this hook to add additional target
- * options to the mapping form of Node processors.
+ * Implements hook_feeds_processor_targets_alter().
  *
- * If the key in $targets[] does not correspond to the actual key on the node
- * object ($node->key), real_target MUST be specified. See mappers/link.inc
- *
- * For an example implementation, see mappers/content.inc
+ * Alter mapping targets for entities.
  *
  * @param &$targets
  *   Array containing the targets to be offered to the user. Add to this array
@@ -88,12 +84,10 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
       'name' => 'Biblio: Citekey',
       'callback' => 'dspace_biblio_set_target',
     );
-
     $targets['biblio_url'] = array(
       'name' => 'Biblio: URL',
       'callback' => 'dspace_biblio_set_target',
     );
-    
     $targets['biblio_number'] = array(
       'name' => 'Biblio: Number',
       'callback' => 'dspace_biblio_set_target',
@@ -102,7 +96,7 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
 }
 
 /**
- * Example callback specified in hook_feeds_processor_targets_alter().
+ * Callback specified in dspace_biblio_feeds_processor_targets_alter().
  *
  * @param $source
  *   Field mapper source settings.
@@ -117,15 +111,12 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
 function dspace_biblio_set_target($source, $entity, $target, $value) {
 
   switch ($target) {
-
     case 'biblio_abst_e':
       $entity->biblio_abst_e = trim($value);
       break;
-
     case 'biblio_type_of_work':
       $entity->biblio_type_of_work = trim($value);
       break;
-
     case 'biblio_contributors':
       $contributors = $value;
       foreach ($contributors as $key => $contributor) {
@@ -159,6 +150,6 @@ function dspace_biblio_set_target($source, $entity, $target, $value) {
       break;
   }
 
-  //Hard code biblio type for now
+  // Hard code biblio type for now
   $entity->biblio_type = 124;;
 }

@@ -2,8 +2,9 @@ Introduction
 ------------
 
 DSpace is the software of choice for academic, non-profit, and commercial
-organizations building open digital repositories. It is free and easy to install
-"out of the box" and completely customizable to fit the needs of any organization.
+organizations building open digital repositories. It is free and easy to 
+install "out of the box" and completely customizable to fit the needs of 
+any organization.
 
 DSpace preserves and enables easy and open access to all types of digital
 content including text, images, moving images, mpegs and data sets. And with an
