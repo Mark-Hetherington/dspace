@@ -6,4 +6,3 @@ package = DSpace
 dependencies[] = biblio
 dependencies[] = dspace
 
-files[] = dspace_biblio.module
