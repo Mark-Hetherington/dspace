@@ -55,11 +55,6 @@ function dspace_biblio_feeds_processor_targets_alter(&$targets, $entity_type, $b
       'callback' => 'dspace_biblio_set_target',
       'description' => t('The type of bibliographic resource, e.g. Book.'),
     );
-    $targets['biblio_type_of_work'] = array(
-      'name' => 'Biblio: Type of work',
-      'callback' => 'dspace_biblio_set_target',
-      'description' => t('The numeric type of bibliographic resource, e.g. 100.'),
-    );
     $targets['biblio_contributors'] = array(
       'name' => 'Biblio: Contributor(s)',
       'callback' => 'dspace_biblio_set_target',
@@ -148,8 +143,27 @@ function dspace_biblio_set_target($source, $entity, $target, $value) {
     case 'biblio_number':
       $entity->biblio_number = trim($value);
       break;
-  }
+    case 'biblio_type':
+      if (!empty($value)) {
+        //Grab the publication type ID from the database
+        $type_id = db_query('SELECT tid FROM {biblio_types} as t WHERE t.name = :name', array(':name' => trim($value)))->fetchField();
+        
+        //if type ID doesn't exists, create it
+        if (empty($type_id)) {
+          $values['name'] = trim($value);
+          $values['description'] = '';
+          $values['tid'] = variable_get('biblio_max_user_tid', '999') + 1;
+          $type_id = $values['tid'];
 
-  // Hard code biblio type for now
-  $entity->biblio_type = 124;;
+          db_insert('biblio_types')
+              ->fields($values)
+              ->execute();
+
+          variable_set('biblio_max_user_tid', $values['tid']);
+        }
+        
+        $entity->biblio_type = (int) $type_id;
+      }
+      break;
+  }
 }
