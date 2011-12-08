@@ -20,58 +20,41 @@ class FeedsDSpaceParser extends FeedsParser {
     $result = new FeedsParserResult();
 
     foreach ($xml->items->itementity as $item) {
-      // GUID
       $items['guid'] = (string) $item->handle;
-
-      // ID
       $items['id'] = (string) $item->id;
-
-      // Last Modified
       $items['lastmodified'] = (string) $item->lastModified;
-
-      // Title
       $items['title'] = (string) $item->name;
-
-      // Submitter
       $items['submitter'] = (string) $item->submitter->netId;
 
-      // Dublin Core Metadata
+      // Dublin Core Metadata.
       $metadata = (string) $item->metadata;
       $metadata = simplexml_load_string("<metadata>" . $metadata . "</metadata>");
 
-      // DC.type
       $type = $metadata->xpath('/metadata/meta[@name = "DC.type"]/@content');
       $items['type'] = (string) $type[0]->content;
 
-      // DC.identifier
       $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
       $items['identifier'] = (string) $identifier[0]->content;
 
-      // DC.number
       $number = $metadata->xpath('/metadata/meta[@name = "DC.relation" and not(@scheme)]/@content');
       $items['number'] = (string) $number[0]->content;
 
-      // DC.creator
       $creators = $metadata->xpath('/metadata/meta[@name = "DC.creator"]/@content');
       foreach ($creators as $creator) {
         $items['creators'][] = (string) $creator;
       }
 
-      // DC.subject
       $keywords = $metadata->xpath('/metadata/meta[@name = "DC.subject"]/@content');
       foreach ($keywords as $keyword) {
         $items['keywords'][] = (string) $keyword;
       }
 
-      // DCTERMS.abstract
       $abstract = $metadata->xpath('/metadata/meta[@name = "DCTERMS.abstract"]/@content');
       $items['abstract'] = (string) $abstract[0]->content;
 
-      // DCTERMS.issued
       $issued = $metadata->xpath('/metadata/meta[@name = "DCTERMS.issued"]/@content');
       $items['issued'] = (string) $issued[0]->content;
 
-      // DCTERMS.bibliographicCitation
       $citation = $metadata->xpath('/metadata/meta[@name = "DCTERMS.bibliographicCitation"]/@content');
       $items['citation'] = (string) $citation[0]->content;
 
@@ -138,7 +121,7 @@ class FeedsDSpaceParser extends FeedsParser {
       'citation' => array(
         'name' => t('Citation'),
         'description' => t('Bibliographic citation of the feed item.'),
-      )
+      ),
     );
   }
 

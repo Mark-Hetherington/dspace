@@ -145,10 +145,10 @@ function dspace_biblio_set_target($source, $entity, $target, $value) {
       break;
     case 'biblio_type':
       if (!empty($value)) {
-        //Grab the publication type ID from the database
+        // Grab the publication type ID from the database.
         $type_id = db_query('SELECT tid FROM {biblio_types} as t WHERE t.name = :name', array(':name' => trim($value)))->fetchField();
 
-        //if type ID doesn't exists, create it
+        // If type ID doesn't exists, create it.
         if (empty($type_id)) {
           $values['name'] = trim($value);
           $values['description'] = '';
