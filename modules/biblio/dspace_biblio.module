@@ -129,9 +129,11 @@ function dspace_biblio_set_target($source, $entity, $target, $value) {
       }
       break;
     case 'biblio_date':
+      date_default_timezone_set('UTC');
       $entity->biblio_date = date('m/Y', strtotime(trim($value)));
       break;
     case 'biblio_year':
+      date_default_timezone_set('UTC');
       $entity->biblio_year = date('Y', strtotime(trim($value)));
       break;
     case 'biblio_citekey':
