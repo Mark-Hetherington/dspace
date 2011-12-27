@@ -18,7 +18,7 @@ class FeedsDSpaceParser extends FeedsParser {
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
     $xml = new SimpleXMLElement($fetcher_result->getRaw());
     $result = new FeedsParserResult();
-    
+
     $items = $xml->xpath('/collections/items/itementity[isWithdrawn != "true"]');
 
     foreach ($items as $item) {
