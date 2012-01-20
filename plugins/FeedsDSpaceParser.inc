@@ -22,46 +22,46 @@ class FeedsDSpaceParser extends FeedsParser {
     $items = $xml->xpath('/collections/items/itementity[isWithdrawn != "true"]');
 
     foreach ($items as $item) {
-      $items['guid'] = (string) $item->handle;
-      $items['id'] = (string) $item->id;
-      $items['lastmodified'] = (string) $item->lastModified;
-      $items['title'] = (string) $item->name;
-      $items['submitter'] = (string) $item->submitter->netId;
+      $publication['guid'] = (string) $item->handle;
+      $publication['id'] = (string) $item->id;
+      $publication['lastmodified'] = (string) $item->lastModified;
+      $publication['title'] = (string) $item->name;
+      $publication['submitter'] = (string) $item->submitter->netId;
 
       // Dublin Core Metadata.
       $metadata = (string) $item->metadata;
       $metadata = simplexml_load_string("<metadata>" . $metadata . "</metadata>");
 
       $type = $metadata->xpath('/metadata/meta[@name = "DC.type"]/@content');
-      $items['type'] = (string) $type[0]->content;
+      $publication['type'] = (string) $type[0]->content;
 
       $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
-      $items['identifier'] = (string) $identifier[0]->content;
+      $publication['identifier'] = (string) $identifier[0]->content;
 
       $number = $metadata->xpath('/metadata/meta[@name = "DC.relation" and not(@scheme)]/@content');
-      $items['number'] = (string) $number[0]->content;
+      $publication['number'] = (string) $number[0]->content;
 
       $creators = $metadata->xpath('/metadata/meta[@name = "DC.creator"]/@content');
       foreach ($creators as $creator) {
-        $items['creators'][] = (string) $creator;
+        $publication['creators'][] = (string) $creator;
       }
 
       $keywords = $metadata->xpath('/metadata/meta[@name = "DC.subject"]/@content');
       foreach ($keywords as $keyword) {
-        $items['keywords'][] = (string) $keyword;
+        $publication['keywords'][] = (string) $keyword;
       }
 
       $abstract = $metadata->xpath('/metadata/meta[@name = "DCTERMS.abstract"]/@content');
-      $items['abstract'] = (string) $abstract[0]->content;
+      $publication['abstract'] = (string) $abstract[0]->content;
 
       $issued = $metadata->xpath('/metadata/meta[@name = "DCTERMS.issued"]/@content');
-      $items['issued'] = (string) $issued[0]->content;
+      $publication['issued'] = (string) $issued[0]->content;
 
       $citation = $metadata->xpath('/metadata/meta[@name = "DCTERMS.bibliographicCitation"]/@content');
-      $items['citation'] = (string) $citation[0]->content;
+      $publication['citation'] = (string) $citation[0]->content;
 
-      $result->items[] = $items;
-      unset($items);
+      $result->items[] = $publication;
+      unset($publication);
     }
 
     return $result;
@@ -124,7 +124,7 @@ class FeedsDSpaceParser extends FeedsParser {
         'name' => t('Citation'),
         'description' => t('Bibliographic citation of the feed item.'),
       ),
-    );
+    )+ parent::getMappingSources();
   }
 
 }
