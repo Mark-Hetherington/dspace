@@ -45,7 +45,7 @@ class FeedsDSpaceParser extends FeedsParser {
       foreach ($creators as $creator) {
         $publication['creators'][] = (string) $creator;
       }
-      
+
       $authors = $metadata->xpath('/metadata/meta[@name = "DC.contributor.author"]/@content');
       foreach ($authors as $author) {
         $publication['authors'][] = (string) $author;
