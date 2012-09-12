@@ -35,7 +35,7 @@ class FeedsDSpaceParser extends FeedsParser {
       $type = $metadata->xpath('/metadata/meta[@name = "DC.type"]/@content');
       $publication['type'] = (string) $type[0]->content;
 
-      $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier"]/@content');
+      $identifier = $metadata->xpath('/metadata/meta[@name = "DC.identifier" and (@scheme = "DCTERMS.URI")]/@content');
       $publication['identifier'] = (string) $identifier[0]->content;
 
       $number = $metadata->xpath('/metadata/meta[@name = "DC.relation" and not(@scheme)]/@content');
