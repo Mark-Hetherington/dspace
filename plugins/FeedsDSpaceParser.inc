@@ -16,20 +16,39 @@ class FeedsDSpaceParser extends FeedsParser {
    * Implements FeedsParser::parse().
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
+    
     $xml = new SimpleXMLElement($fetcher_result->getRaw());
     $result = new FeedsParserResult();
-
-    $items = $xml->xpath('/collections/items/itementity[isWithdrawn != "true"]');
-
+    $baseUrl = $source_config['baseUrl'];
+    
+    $items = $xml->xpath('/items/item[withdrawn != "true"]');
+    watchdog('debug feeds', '<pre>'. json_encode($source->config) .'</pre>');
+    watchdog('debug feeds', '<pre>'. json_encode($items) .'</pre>');
     foreach ($items as $item) {
       $publication['guid'] = (string) $item->handle;
       $publication['id'] = (string) $item->id;
       $publication['lastmodified'] = (string) $item->lastModified;
       $publication['title'] = (string) $item->name;
       $publication['submitter'] = (string) $item->submitter->netId;
+      
+      $bitstreams = $item->xpath('./bitstreams[bundleName = "ORIGINAL"]');
+    watchdog('debug feeds', '<pre>'. json_encode($bitstreams) .'</pre>');
+      if ($bitstreams) {
+        $publication['url'] = 'http://192.168.50.2:8080/rest' . (string) $bitstreams[0]->retrieveLink;
+      }
+      
+      $metadatas = $item->xpath('./metadata');
+      
+      foreach ($metadatas as $metadata) {
+        switch ((string) $metadata->key) {
+            case 'dc.description.abstract':
+                $publication['abstract'] = (string) $metadata->value;                
+                break;
+        }
+      }
 
       // Dublin Core Metadata.
-      $metadata = (string) $item->metadata;
+     /* $metadata = (string) $item->metadata;
       $metadata = simplexml_load_string("<metadata>" . $metadata . "</metadata>");
 
       $type = $metadata->xpath('/metadata/meta[@name = "DC.type"]/@content');
@@ -63,7 +82,7 @@ class FeedsDSpaceParser extends FeedsParser {
       $publication['issued'] = (string) $issued[0]->content;
 
       $citation = $metadata->xpath('/metadata/meta[@name = "DCTERMS.bibliographicCitation"]/@content');
-      $publication['citation'] = (string) $citation[0]->content;
+      $publication['citation'] = (string) $citation[0]->content;*/
 
       $result->items[] = $publication;
       unset($publication);
@@ -133,7 +152,13 @@ class FeedsDSpaceParser extends FeedsParser {
         'name' => t('Citation'),
         'description' => t('Bibliographic citation of the feed item.'),
       ),
+      'url' => array(
+        'name' => t('Url'),
+        'description' => t('Retrieval URL for item.'),
+      ),
     )+ parent::getMappingSources();
   }
+
+
 
 }
